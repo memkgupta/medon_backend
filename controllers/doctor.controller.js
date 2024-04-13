@@ -1,3 +1,4 @@
+import Booking from "../models/booking.model.js";
 import Doctor from "../models/doctor.model.js";
 
 

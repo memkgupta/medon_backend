@@ -79,6 +79,9 @@ export const startMeeting = async(req,res,next)=>{
     
     const doctor = await Doctor.findOne({userId:user._id});
     const booking = await Booking.findById(req.query.booking_id);
+    if(booking.isAttended){
+        return next(new ErrorHandler("Already attended",400))
+    }
     if(booking.isStarted){
         res.status(200).json({success:true,message:"Booking started"});
         return;
@@ -90,3 +93,29 @@ export const startMeeting = async(req,res,next)=>{
     await booking.save();
     res.status(200).json({success:true,message:"Booking started"});
 }
+export const endMeeting = async(req,res,next)=>{
+    const user = req.user;
+    const booking = await Booking.findById(req.query.booking_id);
+    if(booking.isAttended){
+        return next(new ErrorHandler("Already attended",400))
+    }
+    booking.isAttended = true;
+    booking.isStarted = false;
+    await booking.save();
+    res.status(200).json({success:true,message:"Meeting Ended"});
+}
+// export const rating = async(req,res,next)=>{
+//     const user = req.user
+//     const booking = await Booking.findById(req.query.booking_id);
+    
+//     const rating = req.body.rating;
+//     if(!booking.isAttended){
+//         return next(new ErrorHandler("Bad request",400));
+//     }
+//     if(!booking.user._id.equals(user._id)){
+//         return next(new ErrorHandler("Unauthorized",400));
+
+//     }
+//     const doctor = await Doctor.findById(booking.doctor._id);
+//     const ratings = doctor.ratings
+// }

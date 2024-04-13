@@ -11,7 +11,7 @@ if(isUserExists){
     return next(new ErrorHandler("User already exists",401));
 }
 try {
-    const user = await User.create({fullName:fullName,password:password,phone:`+91${phone}}`});
+    const user = await User.create({fullName:fullName,password:password,phone:`+91${phone}`});
     const {message,otp} = await sendOTP(user,next);
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'});
     user.otp = otp;
